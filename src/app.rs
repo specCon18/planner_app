@@ -1,3 +1,5 @@
+use egui::Color32;
+
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)] // if we add new fields, give them default values when deserializing old state
@@ -44,11 +46,8 @@ impl eframe::App for TemplateApp {
     /// Called each time the UI needs repainting, which may be many times per second.
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         // Put your widgets into a `SidePanel`, `TopPanel`, `CentralPanel`, `Window` or `Area`.
-        // For inspiration and more examples, go to https://emilk.github.io/egui
-
         egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
             // The top panel is often a good place for a menu bar:
-
             egui::menu::bar(ui, |ui| {
                 #[cfg(not(target_arch = "wasm32"))] // no File->Quit on web pages!
                 {
@@ -59,50 +58,242 @@ impl eframe::App for TemplateApp {
                     });
                     ui.add_space(16.0);
                 }
-
                 egui::widgets::global_dark_light_mode_buttons(ui);
             });
         });
 
         egui::CentralPanel::default().show(ctx, |ui| {
             // The central panel the region left after adding TopPanel's and SidePanel's
-            ui.heading("eframe template");
-
-            ui.horizontal(|ui| {
-                ui.label("Write something: ");
-                ui.text_edit_singleline(&mut self.label);
-            });
-
-            ui.add(egui::Slider::new(&mut self.value, 0.0..=10.0).text("value"));
-            if ui.button("Increment").clicked() {
-                self.value += 1.0;
-            }
-
-            ui.separator();
-
-            ui.add(egui::github_link_file!(
-                "https://github.com/emilk/eframe_template/blob/master/",
-                "Source code."
-            ));
-
-            ui.with_layout(egui::Layout::bottom_up(egui::Align::LEFT), |ui| {
-                powered_by_egui_and_eframe(ui);
-                egui::warn_if_debug_build(ui);
-            });
-        });
+                ui.separator();
+                ui.vertical_centered(|ui| {
+                    ui.heading("Dump List");
+                });
+                ui.separator();
+                let mut checked: bool = false;        
+                ui.vertical(|ui| {
+                    ui.checkbox(&mut checked, "Task");
+                    ui.checkbox(&mut checked, "Task");
+                    ui.checkbox(&mut checked, "Task");
+                });
+                ui.separator();
+                ui.vertical_centered(|ui| {
+                    ui.heading("Daily Kanban");
+                });
+                ui.separator();
+                ui.vertical(|ui| {
+                    // Create a horizontal layout for Kanban columns
+                    ui.horizontal(|ui| {
+                    // "Staged" column
+                    ui.vertical(|ui| {
+                        ui.vertical(|ui|{
+                            ui.colored_label(Color32::from_rgb(0x0E,0xA5,0xE9), "Staged");
+                        });
+                        ui.horizontal(|ui| {
+                            ui.checkbox(&mut checked, "Do thing with the stuff 1");
+                            ui.colored_label(Color32::from_rgb(0x22,0xC5,0x5E), "🕑")
+                        });
+                        ui.horizontal(|ui| {
+                            ui.checkbox(&mut checked, "Do thing with the stuff 2");
+                            ui.colored_label(Color32::from_rgb(0x22,0xC5,0x5E), "🕑")                            
+                        });
+                        ui.horizontal(|ui| {
+                            ui.checkbox(&mut checked, "Do thing with the stuff 3");
+                            ui.colored_label(Color32::from_rgb(0x22,0xC5,0x5E), "🕑")                            
+                        });
+                    });
+        
+                    // "In Progress" column
+                    ui.vertical(|ui| {
+                        ui.colored_label(Color32::from_rgb(0xEA,0xB3,0x08), "In Progress");
+                        ui.horizontal(|ui| {
+                            ui.checkbox(&mut checked, "Do thing with the stuff 4");
+                            ui.colored_label(Color32::from_rgb(0xF9,0x73,0x16), "🕘")                            
+                        });
+                        ui.horizontal(|ui| {
+                            ui.checkbox(&mut checked, "Do thing with the stuff 5");
+                            ui.colored_label(Color32::from_rgb(0xEF,0x44,0x44), "🕚")                            
+                        });
+                        ui.horizontal(|ui| {
+                            ui.checkbox(&mut checked, "Do thing with the stuff 6");
+                            ui.colored_label(Color32::from_rgb(0xEA,0xB3,0x08), "🕕")                            
+                        });
+                    });
+        
+                    // "Done" column
+                    ui.vertical(|ui| {
+                        ui.colored_label(Color32::from_rgb(0x22,0xC5,0x5E), "Done");
+                        ui.horizontal(|ui| {
+                            ui.checkbox(&mut checked, "Do thing with the stuff 7");
+                            ui.colored_label(Color32::from_rgb(0xEF,0x44,0x44), "🕚")                            
+                        });
+                        ui.horizontal(|ui| {
+                            ui.checkbox(&mut checked, "Do thing with the stuff 8");
+                            ui.colored_label(Color32::from_rgb(0xEF,0x44,0x44), "🕚")                            
+                        });
+                        ui.horizontal(|ui| {
+                            ui.checkbox(&mut checked, "Do thing with the stuff 9");
+                            ui.colored_label(Color32::from_rgb(0xEF,0x44,0x44), "🕚")                            
+                        });
+                    });
+                });
+                });
+                ui.separator();
+                ui.vertical_centered(|ui| {
+                    ui.heading("Monthly Calendar");
+                });
+                ui.separator();
+                ui.vertical(|ui| {
+                    ui.horizontal(|ui|{
+                        ui.separator();
+                        ui.label("Month");
+                        ui.separator();
+                    });
+                    ui.horizontal(|ui| {
+                        //Monday
+                        ui.vertical(|ui| {
+                            ui.horizontal(|ui|{
+                                ui.colored_label(Color32::from_rgb(0xEC,0x48,0x99),"MON");
+                            });
+                            ui.horizontal(|ui|{
+                                ui.label("01");
+                            });
+                            ui.horizontal(|ui|{
+                                ui.label("08");
+                            });
+                            ui.horizontal(|ui|{
+                                ui.label("15");
+                            });
+                            ui.horizontal(|ui|{
+                                ui.label("22");
+                            });
+                            ui.horizontal(|ui|{
+                                ui.label("29");
+                            });
+                        });
+                        //Tuesday
+                        ui.vertical(|ui| {
+                            ui.horizontal(|ui|{
+                                ui.colored_label(Color32::from_rgb(0xD9,0x46,0xEF),"TUE");
+                            });
+                            ui.horizontal(|ui|{
+                                ui.label("02");
+                            });
+                            ui.horizontal(|ui|{
+                                ui.label("09");
+                            });
+                            ui.horizontal(|ui|{
+                                ui.label("16");
+                            });
+                            ui.horizontal(|ui|{
+                                ui.label("23");
+                            });
+                            ui.horizontal(|ui|{
+                                ui.label("30");
+                            });
+                        });
+                        //Wednesday
+                        ui.vertical(|ui| {
+                            ui.horizontal(|ui|{
+                                ui.colored_label(Color32::from_rgb(0xA8,0x55,0xF7),"WED");
+                            });
+                            ui.horizontal(|ui|{
+                                ui.label("03");
+                            });
+                            ui.horizontal(|ui|{
+                                ui.label("10");
+                            });
+                            ui.horizontal(|ui|{
+                                ui.label("17");
+                            });
+                            ui.horizontal(|ui|{
+                                ui.label("24");
+                            });
+                            ui.horizontal(|ui|{
+                                ui.label("31");
+                            });
+                        });
+                        //Thursday
+                        ui.vertical(|ui| {
+                            ui.horizontal(|ui|{
+                                ui.colored_label(Color32::from_rgb(0x8B,0x5C,0xF6),"THU");
+                            });
+                            ui.horizontal(|ui|{
+                                ui.label("04");
+                            });
+                            ui.horizontal(|ui|{
+                                ui.label("11");
+                            });
+                            ui.horizontal(|ui|{
+                                ui.label("18");
+                            });
+                            ui.horizontal(|ui|{
+                                ui.label("25");
+                            });
+                            ui.horizontal(|_ui|{
+                            });
+                        });
+                        //Friday
+                        ui.vertical(|ui| {
+                            ui.horizontal(|ui|{
+                                ui.colored_label(Color32::from_rgb(0x63,0x66,0xF1),"FRI");
+                            });
+                            ui.horizontal(|ui|{
+                                ui.label("05");
+                            });
+                            ui.horizontal(|ui|{
+                                ui.label("12");
+                            });
+                            ui.horizontal(|ui|{
+                                ui.label("19");
+                            });
+                            ui.horizontal(|ui|{
+                                ui.label("26");
+                            });
+                            ui.horizontal(|_ui|{
+                            });
+                        });
+                        //Saterday
+                        ui.vertical(|ui| {
+                            ui.horizontal(|ui|{
+                                ui.colored_label(Color32::from_rgb(0x3B,0x82,0xF6),"SAT");
+                            });
+                            ui.horizontal(|ui|{
+                                ui.label("06");
+                            });
+                            ui.horizontal(|ui|{
+                                ui.label("13");
+                            });
+                            ui.horizontal(|ui|{
+                                ui.label("20");
+                            });
+                            ui.horizontal(|ui|{
+                                ui.label("27");
+                            });
+                            ui.horizontal(|_ui|{
+                            });
+                        });
+                        //Sunday
+                        ui.vertical(|ui| {
+                            ui.horizontal(|ui|{
+                                ui.colored_label(Color32::from_rgb(0x0E,0xA5,0xE9),"SUN");
+                            });
+                            ui.horizontal(|ui|{
+                                ui.label("07");
+                            });
+                            ui.horizontal(|ui|{
+                                ui.label("14");
+                            });
+                            ui.horizontal(|ui|{
+                                ui.label("21");
+                            });
+                            ui.horizontal(|ui|{
+                                ui.label("28");
+                            });
+                            ui.horizontal(|_ui|{
+                            });
+                        });
+                    });
+                });
+            });       
     }
-}
-
-fn powered_by_egui_and_eframe(ui: &mut egui::Ui) {
-    ui.horizontal(|ui| {
-        ui.spacing_mut().item_spacing.x = 0.0;
-        ui.label("Powered by ");
-        ui.hyperlink_to("egui", "https://github.com/emilk/egui");
-        ui.label(" and ");
-        ui.hyperlink_to(
-            "eframe",
-            "https://github.com/emilk/egui/tree/master/crates/eframe",
-        );
-        ui.label(".");
-    });
 }
