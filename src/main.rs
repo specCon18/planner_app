@@ -14,7 +14,7 @@ fn main() -> eframe::Result<()> {
     eframe::run_native(
         "Planner App",
         native_options,
-        Box::new(|cc| Box::new(planner_app::TemplateApp::new(cc))),
+        Box::new(|cc| Box::new(planner_app::PlannerApp::new(cc))),
     )
 }
 
